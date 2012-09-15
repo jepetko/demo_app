@@ -16,4 +16,19 @@ describe "LayoutLinks" do
     end
 
   end
+
+  ####
+
+  it "should have right links on the layout"  do
+
+    visit root_path
+
+    static_links.each do |key,val|
+
+      click_link key
+      response.should have_selector( 'title', :content => key)
+
+    end
+
+  end
 end
