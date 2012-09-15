@@ -42,15 +42,17 @@ development:
 test:
   adapter: postgresql
   encoding: unicode
-  database: demo_app_test
+  database: demo_app_development #here: development database is used
   pool: 5
+  host: localhost
   username: demo_app
-  password:
+  password: demo_app
 
 production:
   adapter: postgresql
   encoding: unicode
   database: demo_app_production
   pool: 5
+  host: localhost
   username: demo_app
-  password:
+  password: demo_app

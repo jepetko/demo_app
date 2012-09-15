@@ -8,11 +8,11 @@ gem 'rails', '3.2.8'
 gem 'pg'
 
 group :development do
-  gem 'rspec-rails', '2.0.1'
+  gem 'rspec-rails', '>=2.8.1'
 end
 
 group :test do
-  gem 'rspec', '2.0.1'
+  gem 'rspec', '>=2.8.1'
   gem 'webrat', '0.7.1'
 end
 
