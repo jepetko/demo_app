@@ -17,6 +17,7 @@ development:
   encoding: unicode
   database: demo_app_development
   pool: 5
+  host: localhost
   username: demo_app
   password: demo_app
 
