@@ -1,12 +1,17 @@
 require 'spec_helper'
 
-static_links = { "Home" => "/", "Contact" => "/contact", "About" => "/about", "Help" => "/help" }
+title_related_links = { "Home" => "/", "Contact" => "/contact",
+                 "About" => "/about", "Help" => "/help",
+                 "Sign up" => "/signup" }
+
+click_link_related_links = { "Home" => "/", "Contact" => "/contact",
+                        "About" => "/about", "Help" => "/help" }
 
 describe "LayoutLinks" do
 
   describe "GET /layout_links" do
 
-    static_links.each do |key,val|
+    title_related_links.each do |key,val|
 
       it "it should have #{key} page at #{val}" do
         get val
@@ -23,12 +28,17 @@ describe "LayoutLinks" do
 
     visit root_path
 
-    static_links.each do |key,val|
+    click_link_related_links.each do |key,val|
 
       click_link key
       response.should have_selector( 'title', :content => key)
 
     end
+
+    visit root_path  #go again to the root page because this button is only there
+
+    click_link 'Sign up now!'
+    response.should have_selector( 'title', :content => 'Sign up' )
 
   end
 end
