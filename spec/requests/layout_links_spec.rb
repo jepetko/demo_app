@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+# das ist ein integrationstest! ob alle links korrekt funktionieren.  und korrekten title haben.
+
 title_related_links = { "Home" => "/", "Contact" => "/contact",
                  "About" => "/about", "Help" => "/help",
                  "Sign up" => "/signup" }

@@ -18,8 +18,8 @@ development:
   database: demo_app_development
   pool: 5
   host: localhost
-  username: demo_app
-  password: demo_app
+  username: katarina
+  password: katarina
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -32,6 +32,11 @@ development:
 
   # Minimum log levels, in increasing order:
   #   debug5, debug4, debug3, debug2, debug1,
+
+
+  # hmmmmm  vielleicht ist es problem mit OpenJDK. weil Rubymine sagt auch: oida
+  # nimm oracle jdk weil mit open jdk gibt es Rendering probleme.kann sein
+
   #   log, notice, warning, error, fatal, and panic
   # The server defaults to notice.
   #min_messages: warning
@@ -42,17 +47,18 @@ development:
 test:
   adapter: postgresql
   encoding: unicode
-  database: demo_app_development #here: development database is used
+  # du brauchst eigene instanz von DB fuer tests!!!
+  database: demo_app_test # soo dann ist deine development nicht geloscht wenn du tests ausfuehrst #here: development database is used
   pool: 5
   host: localhost
-  username: demo_app
-  password: demo_app
+  username: katarina
+  password: katarina
 
 production:
   adapter: postgresql
   encoding: unicode
-  database: demo_app_production
+  database: demo_app_development
   pool: 5
   host: localhost
-  username: demo_app
-  password: demo_app
+  username: katarina
+  password: katarina
