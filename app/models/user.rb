@@ -13,6 +13,12 @@ class User < ActiveRecord::Base
 
   before_save :encrypt_password
 
+#  def initialize(name, email, password, password_confirmation)
+    #self.name = name
+    #self.email = email
+    #self.password =
+ # end
+
   def has_password?(submitted_password)
      self.encrypted_password == encrypt(submitted_password)
   end
