@@ -7,6 +7,8 @@ gem 'rails', '3.2.8'
 
 gem 'pg'
 
+gem 'gravatar_image_tag'
+
 group :development do
   gem 'rspec-rails', '>=2.8.1'
   gem 'factory_girl_rails'
