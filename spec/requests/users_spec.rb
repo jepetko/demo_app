@@ -43,4 +43,39 @@ describe "Users" do
     end
   end
 
+  describe "sign in/out" do
+
+    describe "failure" do
+      if "should not sign a user in" do
+
+        visit signin_path
+        fill_in :email, :with => ""
+        fill_in :password, :with => ""
+        click_button
+
+        response.should have_selector( "div.flash.error", :content => "Invalid")
+
+      end
+
+
+      if "should sign a user in and out" do
+
+        user = FactoryGirl.create(:user)
+        visit signin_path
+        fill_in :email, :with => usr.email
+        fill_in :password, :with => usr.password
+        click_button
+        controller.should be_signed_in
+        click_link "Sign out"
+        controller.should_not be_signed_in
+        controller.should be_signed_out
+
+      end
+
+    end
+
+
+
+  end
+
 end
