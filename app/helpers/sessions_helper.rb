@@ -16,6 +16,10 @@ module SessionsHelper
     @current_user ||= user_from_remember_token
   end
 
+  def current_user?(user)
+    user == current_user #call method current_user for that
+  end
+
   private
 
   def user_from_remember_token
@@ -46,6 +50,32 @@ module SessionsHelper
 
   def signed_out?
      current_user.nil
+  end
+
+  #########################
+
+  def deny_access
+    #flash[:notice] = "...."
+    store_location
+    redirect_to signin_path, :notice => "Please sign in to access this page."
+  end
+
+  def redirect_back_or(default)
+    redirect_to(session[:return_to] || default)
+    clear_return_to
+  end
+
+  def correct_user(user)
+    @user = User.find(params[:id])
+    redirect_to(root_path) unless current_user?(@user)
+  end
+
+  def store_location
+    session[:return_to] = request.fullpath
+  end
+
+  def clear_return_to
+    session[:return_to] = nil
   end
 
 end
