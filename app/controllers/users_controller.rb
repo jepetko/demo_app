@@ -2,10 +2,15 @@ class UsersController < ApplicationController
 
   before_filter :authenticate, :only => [:edit, :update, :index]
   before_filter :correct_user, :only => [:edit, :update]
+  before_filter :admin_user,   :only => [:destroy]
 
   def new
-    @user = User.new
-    @title = "Sign up"
+    if current_user.nil?
+      @user = User.new
+      @title = "Sign up"
+    else
+      redirect_to current_user
+    end
   end
 
   def show
@@ -14,14 +19,18 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new( params[:user])
-    if @user.save
-      sign_in @user ################ to be automatically signed in (mixed from SessionHelper into ApplicationController)
-      flash[:success] = "Welcome to this application"
-      redirect_to @user
+    if current_user.nil?
+      @user = User.new( params[:user])
+      if @user.save
+        sign_in @user ################ to be automatically signed in (mixed from SessionHelper into ApplicationController)
+        flash[:success] = "Welcome to this application"
+        redirect_to @user
+      else
+        @title = "Sign up"
+        render 'new'
+      end
     else
-      @title = "Sign up"
-      render 'new'
+      redirect_to current_user
     end
   end
 
@@ -43,8 +52,23 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.all
+    @users = User.paginate( :page => params[:page])
     @title = "All users"
+  end
+
+  def destroy
+    if current_user.admin?
+      if( current_user.id.to_s != params[:id] )
+        User.find(params[:id]).destroy
+        flash[:success] = "User destroyed."
+        redirect_to users_path
+      else
+        redirect_to signin_path
+      end
+    else
+      redirect_to signin_path
+    end
+
   end
 
   private
@@ -56,5 +80,13 @@ class UsersController < ApplicationController
     def correct_user
       @user = User.find(params[:id])
       redirect_to(root_path) unless current_user?(@user)
+    end
+
+    def admin_user
+      if !current_user.nil?
+        redirect_to(signin_path) unless current_user.admin?    #in book root_path
+      else
+        redirect_to(signin_path)
+      end
     end
 end

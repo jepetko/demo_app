@@ -72,9 +72,20 @@ describe "Users" do
 
       end
 
+      [:new, :create].each do |action|
+        it "should deny access to '#{action}'" do
+          user = FactoryGirl.create(:user)
+          visit signin_path
+          fill_in :email, :with => user.email
+          fill_in :password, :with => user.password
+          click_button
+
+          get "users/new"
+          response.should redirect_to(user_path(user))
+        end
+      end
+
     end
-
-
 
   end
 

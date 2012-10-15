@@ -40,8 +40,6 @@ describe UsersController do
       get :show, :id => @user
       response.should have_selector( "h1>img", :class => "gravatar" )
     end
-
-
   end
 
   describe "POST 'create'" do
@@ -225,11 +223,17 @@ describe UsersController do
     describe "for signed in users" do
 
       before(:each) do
-        @user = FactoryGirl.create(:user)
+        @user = FactoryGirl.create(:user, :admin => true)
+
         second = FactoryGirl.create(:user, :email => "another@example.com" )
         third = FactoryGirl.create(:user, :email => "another@example.net")
 
         @users = [@user, second, third]
+        30.times do
+          @users << FactoryGirl.create(:user, :email => FactoryGirl.generate(:email))
+        end
+
+        test_sign_in @user
       end
 
       it "should be successful" do
@@ -244,12 +248,81 @@ describe UsersController do
 
       it "should have an element for each user" do
         get :index
-        @users.each do |usr|
+        @users[0..2].each do |usr|
           response.should have_selector( "li", :content => usr.name )
         end
       end
 
+      it "should paginate users" do
+        get :index
+        response.should have_selector("div.pagination")
+        response.should have_selector("span.disabled", :content => "Previous")
+        response.should have_selector("a", :href => "/users?page=2", :content => "2")
+        response.should have_selector("a", :href => "/users?page=2", :content => "Next")
+      end
+
+      it "should contain destroy link for admin user" do
+        get :index
+
+        if @user.admin?
+          response.should have_selector("a", :content => "delete")
+        else
+          response.should_not have_selector("a", :content => "delete")
+        end
+      end
+
+      it "should not contain destroy link for current user" do
+        get :index
+        response.should_not have_selector("a", :href => "/users/#{@user.id}", :content => "delete")
+      end
+
     end
   end
+
+  describe "DELETE 'destroy'" do
+    before(:each) do
+      @user = FactoryGirl.create(:user)
+    end
+
+    describe "as a non-signed-in user" do
+      it "should deny access" do
+        delete :destroy, :id => @user
+        response.should redirect_to(signin_path)
+      end
+    end
+
+    describe "as a non-admin user" do
+      it "should protect the page" do
+        test_sign_in(@user)
+        delete :destroy, :id => @user
+        response.should redirect_to(signin_path)
+      end
+    end
+
+    describe "as an admin user" do
+      before(:each) do
+        @admin = FactoryGirl.create(:user, :email => "admin@admin.com", :admin => true)
+        test_sign_in(@admin)
+      end
+
+      it "should not destroy himself" do
+        lambda do
+          delete :destroy, :id => @admin
+        end.should_not change(User, :count)
+      end
+
+      it "should destroy the user" do
+        lambda do
+          delete :destroy, :id => @user
+        end.should change(User, :count).by(-1)
+      end
+
+      it "should redirect to the users page" do
+        delete :destroy, :id => @user
+        response.should redirect_to(users_path)
+      end
+    end
+  end
+
 
 end
