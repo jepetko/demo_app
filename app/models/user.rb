@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
 
   attr_accessor :password
   attr_accessible :name, :email, :password, :password_confirmation
+  has_many :microposts
 
   email_regex = /([a-zA-Z0-9_-]+)+@([a-zA-Z0-9_-]+)+\.([a-zA-Z]+)/i
 
