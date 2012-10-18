@@ -31,6 +31,15 @@ describe UsersController do
       response.should have_selector("title", :content => "Sign up")
     end
 
+  end
+
+  describe "GET 'show'" do
+
+    before(:each) do
+      @user = FactoryGirl.create(:user)
+      puts @user.inspect
+    end
+
     it "should include the user's name" do
       get :show, :id => @user
       response.should have_selector( "h1", :content => @user.name )
@@ -39,6 +48,14 @@ describe UsersController do
     it "should have a profile image" do
       get :show, :id => @user
       response.should have_selector( "h1>img", :class => "gravatar" )
+    end
+
+    it "should show the user's microposts" do
+      mp1 = FactoryGirl.create( :micropost, :user => @user, :content => "Kurwa dupa")
+      mp2 = FactoryGirl.create( :micropost, :user => @user, :content => "Pierdolona ;-)")
+      get :show, :id => @user
+      response.should have_selector("span.content", :content => mp1.content)
+      response.should have_selector("span.content", :content => mp2.content)
     end
   end
 
