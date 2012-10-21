@@ -24,6 +24,11 @@ class User < ActiveRecord::Base
      self.encrypted_password == encrypt(submitted_password)
   end
 
+  def feed
+    Micropost.where("user_id = ?", id)
+    #microposts
+  end
+
   def self.authenticate(email, submitted_password)
     usr = find_by_email(email)
     return nil if usr.nil?
