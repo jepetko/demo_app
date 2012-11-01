@@ -1,18 +1,18 @@
 module SessionsHelper
 
   def sign_in(user)
-    puts "sign_in"
+    #puts "sign_in"
     cookies.permanent.signed[:remember_token] = [user.id, user.salt]
     current_user = user
   end
 
   def current_user=(user)
-    puts "current_user SETTER"
+    #puts "current_user SETTER"
     @current_user = user
   end
 
   def current_user
-    puts "current_user GETTER"
+    #puts "current_user GETTER"
     @current_user ||= user_from_remember_token
   end
 
@@ -27,7 +27,7 @@ module SessionsHelper
   private
 
   def user_from_remember_token
-    puts "user_from_remember_token"
+    #puts "user_from_remember_token"
     User.authenticate_with_salt(*remember_token)
   end
 
@@ -38,10 +38,10 @@ module SessionsHelper
   end
 
   def signed_in?
-    puts "signed_in?"
-    puts "current_user: " + current_user.to_s
-    puts cookies.signed[:remember_token]
-    puts ".....: " + @current_user.inspect
+    #puts "signed_in?"
+    #puts "current_user: " + current_user.to_s
+    #puts cookies.signed[:remember_token]
+    #puts ".....: " + @current_user.inspect
     !current_user.nil?
   end
 
