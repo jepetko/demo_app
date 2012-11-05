@@ -6,7 +6,8 @@ class User < ActiveRecord::Base
   attr_accessible :name, :email, :password, :password_confirmation
   has_many :microposts, :dependent => :destroy
 
-  has_many :relationships, :foreign_key => :follower_id, :dependent => :destroy
+  has_many :relationships, :foreign_key => :follower_id, :dependent => :destroy, :autosave => true
+  has_many :following, :through => :relationships, :source => :followed
 
   email_regex = /([a-zA-Z0-9_-]+)+@([a-zA-Z0-9_-]+)+\.([a-zA-Z]+)/i
 
@@ -30,6 +31,19 @@ class User < ActiveRecord::Base
     Micropost.where("user_id = ?", id)
     #microposts
   end
+
+  def follow!(followed)
+    self.relationships.create!(:followed_id => followed.id)
+  end
+
+  def following?(followed)
+    self.relationships.find_by_followed_id(followed)
+  end
+
+  def unfollow!(followed)
+    self.relationships.find_by_followed_id(followed.id).destroy
+  end
+
 
   def self.authenticate(email, submitted_password)
     usr = find_by_email(email)
