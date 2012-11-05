@@ -9,6 +9,9 @@ class User < ActiveRecord::Base
   has_many :relationships, :foreign_key => :follower_id, :dependent => :destroy, :autosave => true
   has_many :following, :through => :relationships, :source => :followed
 
+  has_many :reverse_relationships, :foreign_key => :followed_id, :class_name => "Relationship", :dependent => :destroy
+  has_many :followers, :through => :reverse_relationships, :source => :follower
+
   email_regex = /([a-zA-Z0-9_-]+)+@([a-zA-Z0-9_-]+)+\.([a-zA-Z]+)/i
 
   validates :name, :presence => true, :length => { :maximum => 50 }
