@@ -11,6 +11,8 @@ gem 'gravatar_image_tag'
 
 gem 'will_paginate', '~> 3.0.0'
 
+gem 'prototype'
+
 group :development do
   gem 'rspec-rails', '>=2.8.1'
   gem 'factory_girl_rails'
