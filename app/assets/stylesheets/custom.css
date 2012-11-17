@@ -218,12 +218,12 @@ table.microposts tr td.micropost {
 
 table.microposts tr td.micropost span.content {
     display: block;
-    font-size: 50%;
+    font-size: 90%;
 }
 
 table.microposts tr td.micropost span.timestamp {
     display: block;
-    font-size: 50%;
+    font-size: 70%;
     color: #666;
 }
 
@@ -250,4 +250,8 @@ form.new_micropost {
 form.new_micropost textarea {
     height: 4em;
     margin-bottom: 0;
+}
+
+#follow_form {
+    padding-top: 5px;
 }

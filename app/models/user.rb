@@ -6,6 +6,12 @@ class User < ActiveRecord::Base
   attr_accessible :name, :email, :password, :password_confirmation
   has_many :microposts, :dependent => :destroy
 
+  has_many :relationships, :foreign_key => :follower_id, :dependent => :destroy, :autosave => true
+  has_many :following, :through => :relationships, :source => :followed
+
+  has_many :reverse_relationships, :foreign_key => :followed_id, :class_name => "Relationship", :dependent => :destroy
+  has_many :followers, :through => :reverse_relationships, :source => :follower
+
   email_regex = /([a-zA-Z0-9_-]+)+@([a-zA-Z0-9_-]+)+\.([a-zA-Z]+)/i
 
   validates :name, :presence => true, :length => { :maximum => 50 }
@@ -25,9 +31,22 @@ class User < ActiveRecord::Base
   end
 
   def feed
-    Micropost.where("user_id = ?", id)
+    Micropost.from_users_followed_by(self)
     #microposts
   end
+
+  def follow!(followed)
+    self.relationships.create!(:followed_id => followed.id)
+  end
+
+  def following?(followed)
+    self.relationships.find_by_followed_id(followed)
+  end
+
+  def unfollow!(followed)
+    self.relationships.find_by_followed_id(followed.id).destroy
+  end
+
 
   def self.authenticate(email, submitted_password)
     usr = find_by_email(email)
