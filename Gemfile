@@ -19,7 +19,7 @@ group :development do
   #gem 'annotate-models', '1.0.4'
   gem 'minitest'
   gem 'minitest-reporters'
-  gem 'faker'
+  gem 'faker', :require => false   #already loaded by bunder, see http://stackoverflow.com/questions/5013826/heroku-rake-dbmigrate-no-such-file-to-load-faker
 end
 
 group :test do
