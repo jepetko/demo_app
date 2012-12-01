@@ -31,6 +31,10 @@ group :test do
   gem 'minitest-reporters'
 end
 
+group :production do
+  ::ActiveSupport::Deprecation.silenced = true
+end
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
